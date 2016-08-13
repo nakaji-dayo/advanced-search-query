@@ -32,6 +32,13 @@ describe('advanced-search-query', function() {
     res.should.have.property('tag')
       .with.deepEqual(['restaurant'])
   });
-  
+  it('geo', function() {
+    (function () {parser.parse('geo:hoge')}).should.throw(/Expecting 'COORDINATE', got 'WORD'/)
+  });
+  it('geo', function() {
+    let res = parser.parse('geo:123.456,789.123')
+    res.should.have.property('geo')
+      .with.equal('123.456,789.123');
+  });
 });
 

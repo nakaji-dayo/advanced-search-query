@@ -9,10 +9,12 @@
 ","                 { return "COMMA" }
 "tag:"              { return "TAG_KEY" }
 "q:"                { return "Q_KEY" }
+"geo:"                { return "GEO_KEY" }
 \s+                 { return "SPACE" }
 <<EOF>>             { return "EOF" }
 /* \w+ { return "WORD" } */
 /* (?!.*(\s|tag:|q:|\,)).+ {return "WORD"} */
+(\-?\d+(\.\d+)?)\,(\-?\d+(\.\d+)?)  return "COORDINATE"
 [^\s,]+ return "WORD"
 
 /lex
@@ -46,6 +48,8 @@ PAIR
     { $$ = {tag: $2} }
   | Q_KEY SET
     { $$ = {q: $2} }
+  | GEO_KEY COORDINATE
+    { $$ = {geo: $2} }
   | TERM
     { $$ = {q: [$1]} }
 ;
@@ -82,4 +86,4 @@ const deepMerge = (ks) => (x, y) =>
                   Object.assign(acc, {[k]: mergeArray(x[k], y[k])})
                   , {});
 
-const merge = deepMerge(['q', 'tag']);
+const merge = deepMerge(['q', 'tag', 'geo']);
